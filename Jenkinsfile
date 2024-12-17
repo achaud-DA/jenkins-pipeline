@@ -19,6 +19,8 @@ pipeline {
                     sh '''
                         python3 -m venv venv
                         . venv/bin/activate
+                        python3 -m pip install --upgrade pip
+                        pip install pylint fastapi pytest requests
                     '''
                 }
             }
@@ -61,24 +63,28 @@ pipeline {
         stage('Run Integration Tests') {
             steps {
                 script {
-                    // Start the API container
-                    sh 'docker run -d -p 8000:8000 --name fastapi-test $DOCKER_IMAGE:latest'
-                    
-                    // Wait for API to be ready
-                    sh 'sleep 10'
-                    
-                    // Run integration tests
                     sh '''
-                        pip install pytest requests
+                        # Activate virtual environment
+                        . venv/bin/activate
+                        
+                        # Start the API container
+                        docker run -d -p 8000:8000 --name fastapi-test $DOCKER_IMAGE:latest
+                        
+                        # Wait for API to be ready
+                        sleep 10
+                        
+                        # Run integration tests
                         pytest tests/integration/
                     '''
                 }
             }
             post {
                 always {
-                    // Cleanup: Stop and remove the test container
-                    sh 'docker stop fastapi-test || true'
-                    sh 'docker rm fastapi-test || true'
+                    sh '''
+                        # Cleanup: Stop and remove the test container
+                        docker stop fastapi-test || true
+                        docker rm fastapi-test || true
+                    '''
                 }
             }
         }
