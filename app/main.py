@@ -1,9 +1,7 @@
 """
-FastAPI application providing a simple REST API with root and items endpoints.
+FastAPI application providing a simple REST API with root endpoint.
 This module serves as the main entry point for the API service.
 """
-from typing import Optional
-
 from fastapi import FastAPI
 
 app = FastAPI()
