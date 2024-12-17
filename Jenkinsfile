@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = "your-dockerhub-username/your-repo-name"
+        DOCKER_IMAGE = "achaud70/fastapi-pipeline"
         DOCKER_TAG = ""
         PATH = "/usr/local/bin:/usr/bin:/bin:${PATH}"
     }
