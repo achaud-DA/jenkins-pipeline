@@ -36,7 +36,7 @@ pipeline {
                     sh '''
                         . venv/bin/activate
                         python3 -m pip install --upgrade pip
-                        pip install pylint
+                        pip install pylint fastapi
                         pylint --fail-under=7.0 app/
                     '''
                 }

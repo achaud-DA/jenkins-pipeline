@@ -2,7 +2,7 @@
 FastAPI application providing a simple REST API with root and items endpoints.
 This module serves as the main entry point for the API service.
 """
-from typing import Union, Optional
+from typing import Optional
 
 from fastapi import FastAPI
 
