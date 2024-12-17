@@ -18,4 +18,3 @@ def read_root() -> dict:
         dict: A greeting message in JSON format
     """
     return {"Hello": "World"}
-
