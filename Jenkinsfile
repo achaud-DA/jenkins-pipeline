@@ -3,8 +3,9 @@ pipeline {
     
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = "achaud70/fastapi-pipeline"
+        DOCKER_IMAGE = "your-dockerhub-username/your-repo-name"
         DOCKER_TAG = ""
+        PATH = "/usr/local/bin:/usr/bin:/bin:${PATH}"
     }
     
     triggers {
@@ -12,6 +13,17 @@ pipeline {
     }
     
     stages {
+        stage('Setup Python') {
+            steps {
+                script {
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                    '''
+                }
+            }
+        }
+        
         stage('Checkout') {
             steps {
                 checkout scm
@@ -20,11 +32,14 @@ pipeline {
         
         stage('Code Quality Check') {
             steps {
-                sh '''
-                    python -m pip install --upgrade pip
-                    pip install pylint
-                    pylint --fail-under=7.0 app/
-                '''
+                script {
+                    sh '''
+                        . venv/bin/activate
+                        python3 -m pip install --upgrade pip
+                        pip install pylint
+                        pylint --fail-under=7.0 app/
+                    '''
+                }
             }
         }
         
@@ -99,6 +114,7 @@ pipeline {
     post {
         always {
             sh 'docker logout'
+            cleanWs()
         }
     }
 }
