@@ -16,3 +16,14 @@ def read_root() -> dict:
         dict: A greeting message in JSON format
     """
     return {"Hello": "World"}
+
+
+@app.get("/health")
+def health_check() -> dict:
+    """
+    Health check endpoint to verify service status.
+    
+    Returns:
+        dict: Service status information
+    """
+    return {"status": "healthy", "service": "fastapi-app"}

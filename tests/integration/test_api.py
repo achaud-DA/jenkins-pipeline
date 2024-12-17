@@ -1,27 +1,36 @@
+"""
+Integration tests for the FastAPI application.
+Tests the root and health check endpoints.
+"""
 import pytest
 import requests
 
 BASE_URL = "http://localhost:8000"
 
 def test_read_root():
+    """
+    Test the root endpoint (/) to ensure it returns the expected greeting message.
+    
+    Verifies:
+    - HTTP 200 status code
+    - Correct JSON response structure
+    """
     response = requests.get(f"{BASE_URL}/")
     assert response.status_code == 200
     assert response.json() == {"Hello": "World"}
 
-def test_read_item_without_query():
-    item_id = 5
-    response = requests.get(f"{BASE_URL}/items/{item_id}")
+def test_health_check():
+    """
+    Test the health check endpoint (/health) to verify service status.
+    
+    Verifies:
+    - HTTP 200 status code
+    - Service status is healthy
+    - Service name is correct
+    """
+    response = requests.get(f"{BASE_URL}/health")
     assert response.status_code == 200
-    assert response.json() == {"item_id": item_id, "q": None}
-
-def test_read_item_with_query():
-    item_id = 5
-    query = "test-query"
-    response = requests.get(f"{BASE_URL}/items/{item_id}?q={query}")
-    assert response.status_code == 200
-    assert response.json() == {"item_id": item_id, "q": query}
-
-def test_read_item_invalid_id():
-    # Testing with a string instead of an integer
-    response = requests.get(f"{BASE_URL}/items/invalid")
-    assert response.status_code == 422  # FastAPI returns 422 for validation errors 
+    assert response.json() == {
+        "status": "healthy",
+        "service": "fastapi-app"
+    }
