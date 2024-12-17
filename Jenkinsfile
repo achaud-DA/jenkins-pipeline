@@ -17,8 +17,11 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        # Create and activate virtual environment
                         python3 -m venv venv
                         . venv/bin/activate
+                        
+                        # Upgrade pip and install all required packages
                         python3 -m pip install --upgrade pip
                         pip install pylint fastapi pytest requests
                     '''
@@ -36,9 +39,8 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        # Activate virtual environment and run pylint
                         . venv/bin/activate
-                        python3 -m pip install --upgrade pip
-                        pip install pylint fastapi
                         pylint --fail-under=7.0 app/
                     '''
                 }
